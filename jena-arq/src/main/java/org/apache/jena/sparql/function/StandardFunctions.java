@@ -210,6 +210,8 @@ public class StandardFunctions
         add(registry, xfn+"days-from-dateTime",     FN_DayFromDateTime.class) ;
         // End mis-spelt
 
+        add(registry, xfn+"llm", FN_LLM.class);
+
 //      7.3.1 fn:boolean
 //      7.3.2 fn:not
       add(registry, xfn+"boolean",        FN_BEV.class) ;
