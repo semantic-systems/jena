@@ -211,6 +211,8 @@ public class StandardFunctions
         // End mis-spelt
 
         add(registry, xfn+"llm", FN_LLM.class);
+        add(registry, xfn+"semanticSearch", FN_SemanticSearch.class);
+        add(registry, xfn+"rag", FN_RAG.class);
 
 //      7.3.1 fn:boolean
 //      7.3.2 fn:not

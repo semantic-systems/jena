@@ -850,6 +850,14 @@
 
       <!-- END jena geosparql -->
 
+      <!-- START of KGXL libs -->
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.14.2</version>
+      </dependency>
+      <!-- END of KGXL libs -->
+
     </dependencies>
 
   </dependencyManagement>

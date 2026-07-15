@@ -18,9 +18,11 @@
 
 package org.apache.jena.sparql.function.library;
 
+import org.apache.jena.sparql.expr.ExprEvalException;
 import org.apache.jena.sparql.expr.NodeValue;
 import org.apache.jena.sparql.function.FunctionBase1;
 
+import org.apache.jena.sparql.function.FunctionBase2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.net.URI;
@@ -32,25 +34,37 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public class FN_LLM extends FunctionBase1 {
-    private static final Logger LOG = LoggerFactory.getLogger(FN_LLM.class);
-    public FN_LLM() {
-        super();
-    }
+public class FN_RAG extends FunctionBase2 {
 
+    public FN_RAG() { super(); }
+
+    private static final Logger LOG = LoggerFactory.getLogger(FN_RAG.class);
     @Override
-    public NodeValue exec(NodeValue v) {
-        String prompt = v.getString();
-        LOG.info("[FN_LLM] Received prompt are: {}", prompt);
-        try {
-            String result = FN_LLM_Client.llmCall(
-                    "http://localhost:8000",
-                    prompt
+    public NodeValue exec(NodeValue instructionNode, NodeValue contextNode) {
+
+        if (!instructionNode.isString() || !contextNode.isString()) {
+            throw new ExprEvalException(
+                    "rag(instruction, context) expects string arguments"
             );
+        }
+
+        String instruction = instructionNode.getString();
+        String context = contextNode.getString();
+
+        LOG.info("[FN_RAG] Instruction: {}", instruction);
+        LOG.info("[FN_RAG] Context length: {}", context.length());
+
+        try {
+            String result =
+                    RAGClient.callRAG(
+                            System.getenv("RAG_URL"), // e.g. http://localhost:8000
+                            instruction,
+                            context
+                    );
             return NodeValue.makeString(result);
 
         } catch (Exception e) {
-            throw new RuntimeException("LLM call failed", e);
+            throw new ExprEvalException("RAG call failed", e);
         }
     }
 }
